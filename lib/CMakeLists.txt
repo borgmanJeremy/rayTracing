@@ -1,14 +1,24 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.13)
 project(ray_tracing_weekend_lib VERSION 0.0.1 LANGUAGES CXX)
 
 add_library(ray_tracing_lib)
-target_compile_options(ray_tracing_lib PRIVATE -Wall -Wextra -Wpedantic)
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    target_compile_options(ray_tracing_lib PRIVATE -Wall -Wpedantic)
+elseif (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    target_compile_options(ray_tracing_lib PRIVATE -Wall -Wpedantic)
+elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+   target_compile_options(ray_tracing_lib PRIVATE -W3)
+endif()
 
 target_sources(ray_tracing_lib
   PRIVATE
+    "src/object.cpp"  
     "src/flat_image.cpp"
-    "src/ray_tracing.cpp"
-)
+    "src/vec_4f.cpp"
+    "src/material.cpp"  
+    "src/ray.cpp"
+    )
 
 target_include_directories(ray_tracing_lib
   PUBLIC
@@ -16,4 +26,4 @@ target_include_directories(ray_tracing_lib
     $<INSTALL_INTERFACE:include/>
 )
 
-
+set_target_properties(ray_tracing_lib PROPERTIES CXX_STANDARD 17)
